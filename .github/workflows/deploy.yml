@@ -63,6 +63,12 @@ jobs:
       - name: Output contents
         run: ls
       - name: Deploy site
+        id: deploy
+        uses: ./.github/actions/deploy-s3-javascript
+        with:
+          bucket: ${{ secrets.S3_BUCKET }}
+          bucket-region: ${{ secrets.S3_REGION }}
+          dist-folder: dist
         uses: ./.github/actions/deploy-s3-javascript
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -71,3 +77,6 @@ jobs:
           bucket: gha-customer-action-1234567890
           dist-folder: ./dist
           # bucket-region: us-east-1
+      - name: Output Information
+        run: |
+          echo "Website URL: ${{ steps.deploy.outputs.website-url }}"
